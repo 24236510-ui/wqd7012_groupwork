@@ -890,7 +890,7 @@ preprocessor = ColumnTransformer(transformers=[
 # Define XGBoost pipeline
 xgb_pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('regressor', xgb.XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42, n_jobs=-1))
+    ('regressor', XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42, n_jobs=-1))
 ])
 
 # Train-test split and model training
@@ -908,7 +908,7 @@ xgb_pipeline.fit(X_train, y_train)
         ])
         xgb_pipeline = Pipeline(steps=[
             ('preprocessor', xgb_preprocessor),
-            ('regressor', xgb.XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42, n_jobs=-1))
+            ('regressor', XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42, n_jobs=-1))
         ])
         st.info("🔄 Training XGBoost model...")
 
