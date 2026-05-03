@@ -459,7 +459,7 @@ for i, col in enumerate(cols_to_plot):
         axes[i].tick_params(axis='x', rotation=45)
 
 # Adjust layout to prevent clipping of labels
-plt.tight_layout()
+# plt.tight_layout()  # Disabled for cloud compatibility
 plt.show()
     """, language="python")
 
@@ -477,7 +477,7 @@ plt.show()
                 axes[i].set_xlabel('Concentration (log scale)')
                 axes[i].tick_params(axis='x', rotation=45)
 
-    plt.tight_layout()
+    # plt.tight_layout()  # Disabled for cloud compatibility
     st.pyplot(fig)
 
     st.markdown("""
@@ -533,7 +533,7 @@ ax1.legend(lines, labels, loc='upper left')
 
 plt.title('Average Water Quality Metrics Over Time (Dual Axis: 2000-2023)', fontsize=14)
 plt.grid(True, linestyle='--', alpha=0.3)
-plt.tight_layout()
+# plt.tight_layout()  # Disabled for cloud compatibility
 plt.show()
     """, language="python")
 
@@ -565,7 +565,7 @@ plt.show()
     ax1.legend(lines, labels, loc='upper left')
     ax1.set_title('Average Water Quality Metrics Over Time\n(Dual Axis: Ammonia vs Dissolved Oxygen, 2000-2023)', fontsize=14)
     ax1.grid(True, linestyle='--', alpha=0.3)
-    plt.tight_layout()
+    # plt.tight_layout()  # Disabled for cloud compatibility
     st.pyplot(fig)
 
     st.markdown("""
@@ -625,7 +625,7 @@ sns.heatmap(
 )
 
 plt.title('Enhanced Correlation Matrix (Water Quality + Target)', fontsize=14)
-plt.tight_layout()
+# plt.tight_layout()  # Disabled for cloud compatibility
 plt.show()
     """, language="python")
 
@@ -654,7 +654,7 @@ plt.show()
         linewidths=0.5
     )
     plt.title('Enhanced Correlation Matrix (Water Quality + Target)', fontsize=14)
-    plt.tight_layout()
+    # plt.tight_layout()  # Disabled for cloud compatibility
     st.pyplot(fig)
 
     st.markdown("""
@@ -842,7 +842,7 @@ rf_pipeline.fit(X_train, y_train)
     axes_rf[1].set_title('Random Forest: Top 10 Feature Importances', fontsize=14, fontweight='bold')
     axes_rf[1].set_xlabel('Relative Importance', fontsize=12)
 
-    plt.tight_layout()
+    # plt.tight_layout()  # Disabled for cloud compatibility
     st.pyplot(fig_rf)
 
     st.markdown("""
@@ -956,7 +956,7 @@ xgb_pipeline.fit(X_train, y_train)
     axes_xgb[1].set_title('XGBoost: Top 10 Feature Importances', fontsize=14, fontweight='bold')
     axes_xgb[1].set_xlabel('Relative Importance', fontsize=12)
 
-    plt.tight_layout()
+    # plt.tight_layout()  # Disabled for cloud compatibility
     st.pyplot(fig_xgb)
 
     st.markdown("""
