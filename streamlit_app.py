@@ -47,20 +47,23 @@ def download_data():
         with st.spinner("Downloading Combined_dataset.csv..."):
             urllib.request.urlretrieve(DATA_URL_COMBINED, "Combined_dataset.csv")
 
-@st.cache_data
 def download_models():
+    success = True
     if not os.path.exists(RF_MODEL_PATH):
-        with st.spinner("Downloading Random Forest model..."):
-            try:
+        try:
+            with st.spinner("Downloading Random Forest model..."):
                 urllib.request.urlretrieve(MODEL_URL_RF, RF_MODEL_PATH)
-            except Exception as e:
-                st.warning(f"Failed to download RF model: {e}")
+        except Exception as e:
+            st.warning(f"Failed to download RF model: {e}")
+            success = False
     if not os.path.exists(XGB_MODEL_PATH):
-        with st.spinner("Downloading XGBoost model..."):
-            try:
+        try:
+            with st.spinner("Downloading XGBoost model..."):
                 urllib.request.urlretrieve(MODEL_URL_XGB, XGB_MODEL_PATH)
-            except Exception as e:
-                st.warning(f"Failed to download XGB model: {e}")
+        except Exception as e:
+            st.warning(f"Failed to download XGB model: {e}")
+            success = False
+    return success
 
 @st.cache_data
 def load_raw_data():
@@ -1082,9 +1085,14 @@ xgb_pipeline.fit(X_train, y_train)
     if model_choice == "🌲 Random Forest":
         if model_mode == "📥 Load Saved Model":
             if os.path.exists(RF_MODEL_PATH):
-                pipeline = load_rf_model()
-                st.sidebar.success("✅ Loaded Random Forest model from GitHub")
-                rmse = r2 = mae = 0.0
+                try:
+                    pipeline = load_rf_model()
+                    st.sidebar.success("✅ Loaded Random Forest model from GitHub")
+                    rmse = r2 = mae = 0.0
+                except Exception as e:
+                    st.sidebar.warning(f"⚠️ Failed to load RF model, training locally...")
+                    pipeline, rmse, r2, mae, _, _, _, _, _ = train_rf_model(df)
+                    st.sidebar.success("✅ Random Forest model trained and saved")
             else:
                 st.sidebar.warning("⚠️ Could not download model, will retrain")
                 pipeline, rmse, r2, mae, _, _, _, _, _ = train_rf_model(df)
@@ -1095,13 +1103,20 @@ xgb_pipeline.fit(X_train, y_train)
     else:
         if model_mode == "📥 Load Saved Model":
             if os.path.exists(XGB_MODEL_PATH):
-                pipeline = load_xgb_model()
-                st.sidebar.success("✅ Loaded XGBoost model from GitHub")
-                rmse = r2 = mae = 0.0
+                try:
+                    pipeline = load_xgb_model()
+                    st.sidebar.success("✅ Loaded XGBoost model from GitHub")
+                    rmse = r2 = mae = 0.0
+                except Exception as e:
+                    st.sidebar.warning(f"⚠️ Failed to load XGBoost model, training locally...")
+                    with st.spinner("🔄 Training XGBoost model..."):
+                        pipeline, rmse, r2, mae, _, _, _, _, _ = train_xgb_model(df)
+                    st.sidebar.success("✅ XGBoost model trained and saved")
             else:
-                st.sidebar.error("❌ Could not download XGBoost model!")
-                st.sidebar.info("Please select '🆕 Retrain Model' to train a new model first")
-                st.stop()
+                st.sidebar.warning("⚠️ Could not download XGBoost model, training locally...")
+                with st.spinner("🔄 Training XGBoost model..."):
+                    pipeline, rmse, r2, mae, _, _, _, _, _ = train_xgb_model(df)
+                st.sidebar.success("✅ XGBoost model trained and saved")
         else:
             with st.spinner("🔄 Training XGBoost model..."):
                 pipeline, rmse, r2, mae, _, _, _, _, _ = train_xgb_model(df)

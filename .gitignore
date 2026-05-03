@@ -28,5 +28,4 @@ Thumbs.db
 .streamlit/
 
 # Models (large files - use Git LFS)
-*.pkl
 *.joblib
