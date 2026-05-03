@@ -643,25 +643,15 @@ plt.title('Enhanced Correlation Matrix (Water Quality + Target)', fontsize=14)
 plt.show()
     """, language="python")
 
-    selected_features = [
-        'Ammonia (mg/l)',
-        'Biochemical Oxygen Demand (mg/l)',
-        'Dissolved Oxygen (mg/l)',
-        'Orthophosphate (mg/l)',
-        'Nitrate (mg/l)',
-        'Nitrogen (mg/l)',
-        'Temperature',
-        'pH',
-        'CCME_Values'
-    ]
-    selected_features = [col for col in selected_features if col in df_full.columns]
-    subset_df = df_full[selected_features]
+    from static_data import CORRELATION_MATRIX
 
-    corr_matrix = subset_df.corr()
+    selected_features = CORRELATION_MATRIX["features"]
+    corr_data = CORRELATION_MATRIX["matrix"]
+    corr_df = pd.DataFrame(corr_data, columns=selected_features, index=selected_features)
 
     fig = plt.figure(figsize=(10, 8))
     sns.heatmap(
-        corr_matrix,
+        corr_df,
         annot=True,
         cmap='coolwarm',
         fmt=".2f",
