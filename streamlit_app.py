@@ -24,17 +24,17 @@ DATA_URL_COMBINED = "https://raw.githubusercontent.com/24236510-ui/wqd7012_group
 MODEL_URL_RF = "https://raw.githubusercontent.com/24236510-ui/wqd7012_groupwork/main/rf_model.pkl"
 MODEL_URL_XGB = "https://raw.githubusercontent.com/24236510-ui/wqd7012_groupwork/main/xgb_model.pkl"
 
-# Precomputed evaluation results for remote display
+# Precomputed evaluation results for remote display (matched with ipynb)
 PRECOMPUTED_RESULTS = {
     "rf": {
-        "rmse": 0.7115,
-        "mae": 0.1264,
+        "rmse": 0.7123,
+        "mae": 0.1258,
         "r2": 0.9971
     },
     "xgb": {
-        "rmse": 0.6841,
-        "mae": 0.2000,
-        "r2": 0.9974
+        "rmse": 0.4914,
+        "mae": 0.1441,
+        "r2": 0.9986
     }
 }
 
@@ -372,6 +372,28 @@ River_Water_Quality_df.to_csv("River_Water_Quality.csv", index=False)
     | Data Types | 9 float64, 4 object, 1 datetime64 |
     | Countries | Canada |
     | Waterbody Type | River |
+    """)
+
+    st.markdown("**Non-Null Values Summary:**")
+    st.markdown("""
+    After filtering, all columns have 100% non-null values:
+    
+    | Column | Non-Null Count | Percentage |
+    |--------|---------------|------------|
+    | Country | 1,629,890 | 100% |
+    | Area | 1,629,890 | 100% |
+    | Waterbody Type | 1,629,890 | 100% |
+    | Date | 1,629,890 | 100% |
+    | Ammonia (mg/l) | 1,629,890 | 100% |
+    | Biochemical Oxygen Demand (mg/l) | 1,629,890 | 100% |
+    | Dissolved Oxygen (mg/l) | 1,629,890 | 100% |
+    | Orthophosphate (mg/l) | 1,629,890 | 100% |
+    | pH (ph units) | 1,629,890 | 100% |
+    | Temperature (cel) | 1,629,890 | 100% |
+    | Nitrogen (mg/l) | 1,629,890 | 100% |
+    | Nitrate (mg/l) | 1,629,890 | 100% |
+    | CCME_Values | 1,629,890 | 100% |
+    | CCME_WQI | 1,629,890 | 100% |
     """)
 
     st.markdown("**Dataset Preview (First 5 Records):**")
