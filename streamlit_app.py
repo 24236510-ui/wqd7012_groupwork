@@ -792,22 +792,31 @@ rf_pipeline.fit(X_train, y_train)
     cat_features = ['Country', 'Waterbody Type']
     num_features = [col for col in X_rf.columns if col not in cat_features]
     
-    # Load or use precomputed results for model
+    # Initialize variables
+    rmse_rf = mae_rf = r2_rf = None
+    y_test_sample = None
+    y_pred_rf = None
+    
+    # Try to load pre-trained model first
     if os.path.exists(RF_MODEL_PATH):
-        rf_pipeline = load_rf_model()
-        st.info("✅ Loaded Random Forest model from GitHub")
-        # Use precomputed evaluation results for remote display
-        rmse_rf = PRECOMPUTED_RESULTS["rf"]["rmse"]
-        mae_rf = PRECOMPUTED_RESULTS["rf"]["mae"]
-        r2_rf = PRECOMPUTED_RESULTS["rf"]["r2"]
-        # Generate synthetic visualization data to avoid training on full dataset
-        X_train_rf, X_test_rf, y_train_rf, y_test_rf = train_test_split(X_rf, y_rf, test_size=0.2, random_state=42)
-        sample_idx = np.random.choice(len(X_test_rf), size=min(4000, len(X_test_rf)), replace=False)
-        y_test_sample = y_test_rf.iloc[sample_idx]
-        y_pred_rf = rf_pipeline.predict(X_test_rf.iloc[sample_idx])
-    else:
-        # Fallback to training (only if model download fails)
-        st.warning("⚠️ Could not load pre-trained model, training locally...")
+        try:
+            rf_pipeline = load_rf_model()
+            st.info("✅ Loaded Random Forest model from GitHub")
+            # Use precomputed evaluation results for remote display
+            rmse_rf = PRECOMPUTED_RESULTS["rf"]["rmse"]
+            mae_rf = PRECOMPUTED_RESULTS["rf"]["mae"]
+            r2_rf = PRECOMPUTED_RESULTS["rf"]["r2"]
+            # Generate visualization data from small sample
+            X_train_rf, X_test_rf, y_train_rf, y_test_rf = train_test_split(X_rf, y_rf, test_size=0.2, random_state=42)
+            sample_idx = np.random.choice(len(X_test_rf), size=min(4000, len(X_test_rf)), replace=False)
+            y_test_sample = y_test_rf.iloc[sample_idx]
+            y_pred_rf = rf_pipeline.predict(X_test_rf.iloc[sample_idx])
+        except Exception as e:
+            st.warning(f"⚠️ Failed to load RF model (numpy version mismatch or corrupt file), training locally...")
+            rf_pipeline = None
+    
+    # Train locally if model loading failed or file doesn't exist
+    if rmse_rf is None:
         preprocessor = ColumnTransformer(transformers=[
             ('num', StandardScaler(), num_features),
             ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
@@ -925,19 +934,29 @@ xgb_pipeline.fit(X_train, y_train)
     cat_features = ['Country', 'Waterbody Type']
     num_features = [col for col in X_xgb.columns if col not in cat_features]
     
-    # XGBoost logic similar to RF - use pre-trained model and precomputed results
+    # Initialize variables
+    rmse_xgb = mae_xgb = r2_xgb = None
+    y_test_sample_xgb = None
+    y_pred_xgb = None
+    
+    # XGBoost logic - try to load pre-trained model first
     if os.path.exists(XGB_MODEL_PATH):
-        xgb_pipeline = load_xgb_model()
-        st.info("✅ Loaded XGBoost model from GitHub")
-        rmse_xgb = PRECOMPUTED_RESULTS["xgb"]["rmse"]
-        mae_xgb = PRECOMPUTED_RESULTS["xgb"]["mae"]
-        r2_xgb = PRECOMPUTED_RESULTS["xgb"]["r2"]
-        X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(X_xgb, y_xgb, test_size=0.2, random_state=42)
-        sample_idx_xgb = np.random.choice(len(X_test_xgb), size=min(4000, len(X_test_xgb)), replace=False)
-        y_test_sample_xgb = y_test_xgb.iloc[sample_idx_xgb]
-        y_pred_xgb = xgb_pipeline.predict(X_test_xgb.iloc[sample_idx_xgb])
-    else:
-        st.warning("⚠️ Could not load pre-trained XGBoost model, training locally...")
+        try:
+            xgb_pipeline = load_xgb_model()
+            st.info("✅ Loaded XGBoost model from GitHub")
+            rmse_xgb = PRECOMPUTED_RESULTS["xgb"]["rmse"]
+            mae_xgb = PRECOMPUTED_RESULTS["xgb"]["mae"]
+            r2_xgb = PRECOMPUTED_RESULTS["xgb"]["r2"]
+            X_train_xgb, X_test_xgb, y_train_xgb, y_test_xgb = train_test_split(X_xgb, y_xgb, test_size=0.2, random_state=42)
+            sample_idx_xgb = np.random.choice(len(X_test_xgb), size=min(4000, len(X_test_xgb)), replace=False)
+            y_test_sample_xgb = y_test_xgb.iloc[sample_idx_xgb]
+            y_pred_xgb = xgb_pipeline.predict(X_test_xgb.iloc[sample_idx_xgb])
+        except Exception as e:
+            st.warning(f"⚠️ Failed to load XGBoost model (numpy version mismatch or corrupt file), training locally...")
+            xgb_pipeline = None
+    
+    # Train locally if model loading failed or file doesn't exist
+    if rmse_xgb is None:
         xgb_preprocessor = ColumnTransformer(transformers=[
             ('num', StandardScaler(), num_features),
             ('cat', OneHotEncoder(handle_unknown='ignore'), cat_features)
