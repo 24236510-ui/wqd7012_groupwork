@@ -1,5 +1,7 @@
 # River Water Quality Prediction System
 
+**Live Application:** https://wqd7012groupwork-3swgv8agwcxjdihcyapopj.streamlit.app/
+
 A machine learning-based water quality analysis and prediction application using the CCME Water Quality Index (WQI).
 
 ## Features
@@ -64,26 +66,6 @@ After launching, open your browser and navigate to:
 - **Local URL**: http://localhost:8501
 - **Network URL**: http://0.0.0.0:8501
 
-## Deployment to Streamlit Community Cloud
-
-### Prerequisites
-
-1. Push all code to your GitHub repository
-2. Ensure Git LFS is properly configured for large files (.csv, .pkl)
-
-### Steps
-
-1. Go to [Streamlit Cloud](https://streamlit.io/cloud)
-2. Click **New app**
-3. Select your GitHub repository: `24236510-ui/wqd7012_groupwork`
-4. Select branch: `main`
-5. Main file path: `streamlit_app.py`
-6. Click **Deploy**
-
-### Note on Large Files
-
-This application uses Git LFS (Large File Storage) to manage large data files. The data files will be downloaded automatically when the app starts.
-
 ## Dataset
 
 The `Combined_dataset.csv` contains water quality measurements from 2000 to 2023 with the following parameters:
@@ -102,8 +84,10 @@ The `Combined_dataset.csv` contains water quality measurements from 2000 to 2023
 
 ## Models
 
-- **Random Forest Regressor**: Ensemble tree-based model for water quality prediction
-- **XGBoost Regressor**: Gradient boosting model with optimized hyperparameters
+| Model | RMSE | MAE | R2 Score |
+|-------|------|-----|----------|
+| Random Forest | 0.7123 | 0.1258 | 0.9971 |
+| XGBoost | 0.4914 | 0.1441 | 0.9986 |
 
 Both models predict the CCME Water Quality Index (WQI) based on water quality parameters.
 
@@ -114,20 +98,6 @@ Use the sidebar menu to navigate between sections:
 2. **Exploratory Data Analysis** (2.1, 2.2, 2.3)
 3. **Model Training** (3.1, 3.2, 3.3, 3.4)
 4. **Application Development** (4.1)
-
-## Troubleshooting
-
-### Memory Issues on Streamlit Cloud
-
-If you encounter memory errors during deployment:
-- The app is optimized to use sampling for large datasets
-- Data files are downloaded from GitHub on startup
-- Models are trained on sampled data to reduce memory usage
-
-### Version Compatibility
-
-- Python 3.9 - 3.12 recommended
-- See `requirements.txt` for exact package versions
 
 ## License
 
